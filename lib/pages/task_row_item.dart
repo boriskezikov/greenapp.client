@@ -14,81 +14,108 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:greenapp/models/task.dart';
-import 'package:greenapp/models/text-styles.dart';
+import 'package:greenapp/utils/styles.dart';
 
 class TaskRowItem extends StatelessWidget {
   const TaskRowItem({
-    this.index,
     this.task,
   });
 
   final Task task;
-  final int index;
 
   @override
   Widget build(BuildContext context) {
     final row = SafeArea(
-      top: false,
-      bottom: false,
-      minimum: const EdgeInsets.only(
-        left: 16,
-        top: 8,
-        bottom: 8,
-        right: 8,
-      ),
-      child: Row(
-        children: <Widget>[
-          ClipRRect(
-              borderRadius: BorderRadius.circular(4),
-              child: Text(task.id.toString())),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    task.description,
-                    style: TextStyles.productRowItemName,
-                  ),
-                  const Padding(padding: EdgeInsets.only(top: 8)),
-                  Text(
-                    '\$${task.reward}',
-                    style: TextStyles.productRowItemPrice,
-                  )
-                ],
+        top: false,
+        bottom: false,
+        minimum: const EdgeInsets.only(
+          left: 8,
+          top: 8,
+          bottom: 0,
+          right: 8,
+        ),
+        child: Container(
+          padding: EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: CupertinoColors.white,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                color: CupertinoColors.systemGrey.withOpacity(0.1),
+                spreadRadius: 3,
+                blurRadius: 3,
+                offset: Offset(0, 2),
+              )
+            ],
+          ),
+          child: Row(
+            children: <Widget>[
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          task.title,
+                          style: Styles.body17Medium(),
+                        ),
+                        const Padding(padding: EdgeInsets.only(top: 8)),
+                        Text(
+                          task.description != null
+                              ? '${task.description}'
+                              : 'Description is empty',
+                          style: Styles.body15Regular(),
+                        ),
+                        const Padding(padding: EdgeInsets.only(top: 8)),
+                        RichText(
+                          text: TextSpan(
+                              text: '${task.reward}',
+                              style: Styles.taskPrice(),
+                              children: <TextSpan>[
+                                TextSpan(
+                                    text: ' points',
+                                    style: Styles.taskPriceSecond())
+                              ]),
+                        ),
+                      ]),
+                ),
               ),
-            ),
+              ClipRRect(
+                  child: Image(
+                height: 70,
+                width: 70,
+                image: getRowItemIcon(),
+              ))
+            ],
           ),
-          CupertinoButton(
-            padding: EdgeInsets.zero,
-            onPressed: () {
-              debugPrint("Button on item ${task.id.toString()} pressed");
-            },
-            child: const Icon(
-              CupertinoIcons.plus_circled,
-              semanticLabel: 'Add',
-            ),
-          ),
-        ],
-      ),
-    );
+        ));
 
     return Column(
       children: <Widget>[
         row,
-        Padding(
-          padding: const EdgeInsets.only(
-            left: 100,
-            right: 16,
-          ),
-          child: Container(
-            height: 1,
-            color: TextStyles.productRowDivider,
-          ),
-        ),
       ],
     );
+  }
+
+  AssetImage getRowItemIcon() {
+    switch (task.type) {
+      case TaskType.PLANT:
+//        return BitmapDescriptor.fromAssetImage(
+//            ImageConfiguration(size: Size(48, 48)),
+//            'packages/shrine_images/0-0.jpg');
+        return AssetImage('assets/Pin.png');
+      case TaskType.URBAN:
+        return AssetImage('assets/Pin_magenta.png');
+      case TaskType.ANIMAL:
+        return AssetImage('assets/Pin_red.png');
+      case TaskType.PEOPLE:
+        return AssetImage('assets/Pin_violet.png');
+      case TaskType.ENVIRONMENT:
+        return AssetImage('assets/Pin_orrange.png');
+      default:
+        return AssetImage('assets/Pin.png');
+    }
   }
 }

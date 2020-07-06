@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart'; // NEW
-import 'package:greenapp/models//app_state_model.dart'; // NEW
-import 'package:greenapp/pages/login_singup_page.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:greenapp/pages/root_page.dart';
 import 'package:greenapp/services/authentication.dart';
 
@@ -17,6 +15,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return CupertinoApp(
         debugShowCheckedModeBanner: false,
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: [
+          const Locale('en', ''), // English
+        ],
         home: RootPage(
           auth: Auth(),
         ));
